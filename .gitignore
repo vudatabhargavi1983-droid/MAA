@@ -59,7 +59,7 @@ mental_health_app_frontend/.packages
 mental_health_app_frontend/pubspec.lock
 # Large ML Models
 *.pth
-*.pt
+# *.pt (Allowing .pt for production models)
 *.bin
 *.h5
 *.pkl

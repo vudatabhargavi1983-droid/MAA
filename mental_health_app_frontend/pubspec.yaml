@@ -15,7 +15,7 @@ dependencies:
   flutter_animate: ^4.5.0
   google_fonts: ^6.2.1
   table_calendar: ^3.0.9
-  flutter_lucide: ^0.7.0
+
 
   # Audio & Media
   audioplayers: ^6.1.0

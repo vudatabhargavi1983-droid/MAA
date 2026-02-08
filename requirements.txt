@@ -16,6 +16,7 @@ sentence-transformers
 requests
 gunicorn
 whitenoise
+dj-database-url
 
 # ML Server Dependencies
 fastapi>=0.109.0

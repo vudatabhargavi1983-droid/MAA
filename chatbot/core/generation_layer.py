@@ -25,7 +25,7 @@ class GenerationLayer:
         context_str = ""
         if session and hasattr(session, 'core_context'):
              ctx = session.core_context
-             context_str = f"USER CONTEXT [MEMORY]: Trigger='{ctx.get('trigger_event')}', Fear='{ctx.get('core_fear')}', Mood='{ctx.get('primary_emotion')}'"
+             context_str = f"USER CONTEXT [MEMORY]: Story='{ctx.get('story')}', Trigger='{ctx.get('trigger_event')}', Fear='{ctx.get('core_fear')}', Mood='{ctx.get('primary_emotion')}'"
         
         # 3. Construct the History String
         history_str = ""
@@ -59,26 +59,39 @@ class GenerationLayer:
         else:
             # FRIEND/GUIDE Mode: Highly constrained, therapeutic persona
             persona_prompt = ""
+            
+            # Question Cooldown Logic (Fix for friend/guide)
+            allow_question = True
+            if session and hasattr(session, 'friend_question_cooldown'):
+                if session.friend_question_cooldown > 0:
+                    allow_question = False
+                    session.friend_question_cooldown -= 1
+                else:
+                    allow_question = True
+                    session.friend_question_cooldown = 2 # Ask every 3rd turn
+            
+            question_rule = "MANDATORY: Do NOT ask any questions in this response. Just react and provide feedback." if not allow_question else "You may ask ONE helpful question if it moves the conversation forward."
+
             if mode == 'friend':
-                persona_prompt = """
+                persona_prompt = f"""
                 You are a warm, real human friend. 
                 
                 MANDATORY FRIEND RULES:
-                1. Always sound like a real friend. Use casual words ("hey", "listen", "I get you").
-                2. NO therapy language. Ban words like: "safe space", "exploring", "acknowledging", "process".
-                3. ADAPTIVE RESPONSE:
-                   - If the user is sharing feelings: Validate deeply + ask a simple question.
-                   - If the user is asking for help or a solution: Provide a warm, actionable suggestion as a friend would.
+                1. React naturally (surprise, empathy, humor, reassurance).
+                2. Use casual words ("hey", "listen", "damn", "I get you").
+                3. NO therapy language (Avoid: "safe space", "exploring", "process").
+                4. You are allowed to give advice and share opinions like a real friend.
+                5. {question_rule}
                 """
             else: # guide
-                 persona_prompt = """
-                 You are a calm, skilled CBT-style guide.
+                 persona_prompt = f"""
+                 You are a calm, skilled CBT guide.
                  
                  MANDATORY GUIDE RULES:
-                 1. Structured and calm.
-                 2. NO friend slang ("buddy", "hey dude"). Be warm but professional.
-                 3. Use clear CBT techniques.
-                 4. Focus: Help user examine thoughts.
+                 1. Structured and directional.
+                 2. After understanding the issue, teach ONE technique.
+                 3. Always move toward action and progress.
+                 4. {question_rule}
                  """
 
             system_msg = f"""
@@ -204,6 +217,24 @@ If you are in immediate danger, please call 112.
             - Answer the user's query directly and helpfully.
             - Use a conversational but professional tone.
             - If RAG Context is present, use it to inform your answer.
+            """
+        elif policy == "FRIEND_SUGGEST":
+            return """
+            - Give a small, warm, friendly suggestion (e.g., "Maybe a quick walk could help?" or "How about a favorite snack?").
+            - Keep it simple and very human.
+            - NO clinical or therapy words.
+            - Tone: Supportive friend, not a doctor.
+            """
+        elif policy == "CONCLUSION":
+            return """
+            You are concluding the session. Follow this structure:
+            1. SUMMARY: Briefly state what the user struggled with and the progress made today.
+            2. ACTION: Give exactly ONE simple, practical next action for the user to take.
+            3. ENCOURAGEMENT: End with a warm, confident, and supportive closing statement.
+            RULES: 
+            - DO NOT ask any questions.
+            - DO NOT suggest new techniques.
+            - Tone: Calm, final, and encouraging.
             """
         else:
             return "Be kind, supportive, and human."

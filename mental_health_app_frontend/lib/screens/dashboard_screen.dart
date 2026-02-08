@@ -311,17 +311,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         isAbstract: true,
                       ),
-                      // Art Therapy
-                      _buildMellowCard(
-                        context,
-                        title: 'Art Therapy',
-                        imagePath: 'assets/images/icon_paint.png', 
-                        bgColor: const Color(0xFFF8BBD0), // Pink
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const ArtTherapyHome()),
-                        ),
-                      ),
                     ],
                   ),
                 ],

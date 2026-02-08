@@ -15,8 +15,12 @@ Path: C:\Users\shahi\OneDrive\Documents\Mental_Health_App_Backend\manage.py
 
 Command to run in Terminal:
 
+
 powershell
 python manage.py runserver
 
 flutter build apk --release
 & "C:\Users\shahi\AppData\Local\Android\Sdk\platform-tools\adb.exe" install -r "build\app\outputs\flutter-apk\app-release.apk"
+
+
+python manage.py runserver 0.0.0.0:8000

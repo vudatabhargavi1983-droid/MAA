@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+
 import '../../services/api_service.dart';
 import 'music_player_screen.dart';
 import '../../theme/app_theme.dart';
@@ -143,11 +143,10 @@ class _MusicMoodScreenState extends State<MusicMoodScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  _getMoodIcon(mood),
-                                  color: isSelected ? Colors.white : AppTheme.primaryColor,
-                                  size: 32,
-                                ),
+                                 Text(
+                                   _getMoodEmoji(mood),
+                                   style: const TextStyle(fontSize: 32),
+                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   mood,
@@ -196,11 +195,11 @@ class _MusicMoodScreenState extends State<MusicMoodScreen> {
                                       color: isSelected ? AppTheme.primaryColor : AppTheme.primaryColor.withOpacity(0.1),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Icon(
-                                      LucideIcons.music,
-                                      color: isSelected ? Colors.white : AppTheme.primaryColor,
-                                      size: 20,
-                                    ),
+                                     child: Icon(
+                                       Icons.music_note_rounded,
+                                       color: isSelected ? Colors.white : AppTheme.primaryColor,
+                                       size: 20,
+                                     ),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -246,7 +245,7 @@ class _MusicMoodScreenState extends State<MusicMoodScreen> {
                     GradientButton(
                       text: "Start Session",
                       onPressed: canStart ? _startSession : null,
-                      icon: LucideIcons.playCircle,
+                       icon: Icons.play_circle_outline_rounded,
                     ),
                     const SizedBox(height: 20),
                   ],
@@ -256,19 +255,19 @@ class _MusicMoodScreenState extends State<MusicMoodScreen> {
     );
   }
 
-  IconData _getMoodIcon(String mood) {
+  String _getMoodEmoji(String mood) {
     switch (mood) {
-      case 'Anxious': return LucideIcons.zap;
-      case 'Sad': return LucideIcons.cloudRain;
-      case 'Angry': return LucideIcons.flame;
-      case 'Tired': return LucideIcons.moon;
-      case 'Stressed': return LucideIcons.alertCircle;
-      case 'Calm': return LucideIcons.wind;
-      case 'Grateful': return LucideIcons.sparkles;
-      case 'Loved': return LucideIcons.heart;
-      case 'Excited': return LucideIcons.partyPopper;
-      case 'Happy': return LucideIcons.smile;
-      default: return LucideIcons.smile;
+      case 'Anxious': return '😰';
+      case 'Sad': return '😔';
+      case 'Angry': return '😠';
+      case 'Tired': return '😴';
+      case 'Stressed': return '😫';
+      case 'Calm': return '😌';
+      case 'Grateful': return '✨';
+      case 'Loved': return '🥰';
+      case 'Excited': return '🤩';
+      case 'Happy': return '😊';
+      default: return '😊';
     }
   }
 }

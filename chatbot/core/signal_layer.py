@@ -63,11 +63,23 @@ class SignalLayer:
         if "?" in text_lower or any(text_lower.startswith(w) for w in question_words):
             q_type = "QUESTION"
             
+        # 6. Detect Intent (NEW: VENT vs SOLVE)
+        intent = "VENT"
+        solve_keywords = ["what should i do", "how to fix", "advice", "help me with", "solution", "suggest", "tips", "how do i"]
+        if any(kw in text_lower for kw in solve_keywords) or (q_type == "QUESTION" and any(w in text_lower for w in ["how", "should"])):
+            intent = "SOLVE"
+        
+        # 7. Detect Conclude Intent (NEW Step 1: Conclusion Mode)
+        conclude_keywords = ["solution", "conclusion", "what now", "final", "summary", "done", "wrap up", "stop", "end"]
+        if any(kw in text_lower for kw in conclude_keywords):
+            intent = "CONCLUDE"
+
         return {
             "emotion": emotion,
             "intensity": intensity,
             "type": q_type,
             "distortion": distortion,
             "hopelessness": hopelessness,
+            "intent": intent,
             "action_preference": "NONE"
         }

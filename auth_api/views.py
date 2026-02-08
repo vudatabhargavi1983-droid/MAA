@@ -192,11 +192,19 @@ class ResetPasswordView(APIView):
             user = User.objects.get(email=email)
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link = f"http://127.0.0.1:8000/reset-password/{uid}/{token}/"
+            
+            # Use host from request to make it work on any IP (important for mobile)
+            host = request.get_host()
+            # path should match what's in urls.py
+            reset_link = f"http://{host}/api/auth/reset-confirm/{uid}/{token}/"
             
             send_mail(
                 'Password Reset Request',
-                f'Click this link to reset your password: {reset_link}',
+                f'Click this link to reset your password or copy the codes below:\n\n'
+                f'Link: {reset_link}\n\n'
+                f'Verification Code (UID): {uid}\n'
+                f'Verification Token: {token}\n\n'
+                f'Paste these into the app if the link doesn\'t open automatically.',
                 settings.EMAIL_HOST_USER,
                 [email],
                 fail_silently=False
@@ -213,24 +221,25 @@ class ResetPasswordConfirmView(APIView):
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
             if default_token_generator.check_token(user, token):
-                return Response({'message': 'Token is valid', 'uid': uid}, status=status.HTTP_200_OK)
+                return Response({'message': 'Token is valid', 'uid': uidb64}, status=status.HTTP_200_OK)
             return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
         except (TypeError, ValueError, User.DoesNotExist):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, uidb64, token):
-        uid = request.data.get('uid')
+        # Prefer values from body if present, else use from URL
+        uid_input = request.data.get('uid', uidb64)
         new_password = request.data.get('new_password')
         confirm_password = request.data.get('confirm_password')
         
-        if not all([uid, new_password, confirm_password]):
-            return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+        if not all([new_password, confirm_password]):
+            return Response({'error': 'Passwords are required'}, status=status.HTTP_400_BAD_REQUEST)
         
         if new_password != confirm_password:
             return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            uid_int = force_str(urlsafe_base64_decode(uid))
+            uid_int = force_str(urlsafe_base64_decode(uid_input))
             user = User.objects.get(pk=uid_int)
             if default_token_generator.check_token(user, token):
                 user.set_password(new_password)

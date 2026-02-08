@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_card.dart';
@@ -22,16 +22,16 @@ class _MoodJournalScreenState extends State<MoodJournalScreen> {
 
   // Mapping from stored 'mood_emoji' value to icon and color
   final Map<String, Map<String, dynamic>> _moodConfig = {
-    'happy': {'icon': LucideIcons.smile, 'color': Colors.amber},
-    'calm': {'icon': LucideIcons.wind, 'color': Colors.teal},
-    'sad': {'icon': LucideIcons.frown, 'color': Colors.blue},
-    'angry': {'icon': LucideIcons.flame, 'color': Colors.red},
-    'tired': {'icon': LucideIcons.moon, 'color': Colors.indigo},
-    'anxious': {'icon': LucideIcons.zap, 'color': Colors.orange},
-    'stressed': {'icon': LucideIcons.alertCircle, 'color': Colors.deepOrange},
-    'grateful': {'icon': LucideIcons.sparkles, 'color': Colors.purple},
-    'loved': {'icon': LucideIcons.heart, 'color': Colors.pink},
-    'excited': {'icon': LucideIcons.partyPopper, 'color': Colors.yellow},
+    'happy': {'icon': '😊', 'color': Colors.amber},
+    'calm': {'icon': '😌', 'color': Colors.teal},
+    'sad': {'icon': '😔', 'color': Colors.blue},
+    'angry': {'icon': '😠', 'color': Colors.red},
+    'tired': {'icon': '😴', 'color': Colors.indigo},
+    'anxious': {'icon': '😰', 'color': Colors.orange},
+    'stressed': {'icon': '😫', 'color': Colors.deepOrange},
+    'grateful': {'icon': '✨', 'color': Colors.purple},
+    'loved': {'icon': '🥰', 'color': Colors.pink},
+    'excited': {'icon': '🤩', 'color': Colors.yellow},
   };
 
   @override
@@ -93,7 +93,7 @@ class _MoodJournalScreenState extends State<MoodJournalScreen> {
                           padding: const EdgeInsets.only(top: 40),
                           child: Column(
                             children: [
-                              Icon(LucideIcons.calendarX2, size: 60, color: AppTheme.textLight.withOpacity(0.3)),
+                              Icon(Icons.calendar_today_rounded, size: 60, color: AppTheme.textLight.withOpacity(0.3)),
                               const SizedBox(height: 16),
                               Text('No mood logs yet.\nStart tracking today!', 
                                 textAlign: TextAlign.center,
@@ -202,7 +202,7 @@ class _MoodJournalScreenState extends State<MoodJournalScreen> {
       children: [
         Row(
            children: [
-             Icon(LucideIcons.barChart3, size: 18, color: AppTheme.textLight),
+             Icon(Icons.bar_chart_rounded, size: 18, color: AppTheme.textLight),
              const SizedBox(width: 8),
              Text('Mood Distribution', style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.textLight)),
            ],
@@ -247,7 +247,7 @@ class _MoodJournalScreenState extends State<MoodJournalScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1), shape: BoxShape.circle),
-              child: const Icon(LucideIcons.sparkles, color: AppTheme.primaryColor, size: 20),
+               child: Icon(Icons.auto_awesome_rounded, color: AppTheme.primaryColor, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -305,7 +305,12 @@ class _MoodJournalScreenState extends State<MoodJournalScreen> {
               color: moodColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(config['icon'], color: moodColor, size: 28),
+            child: Center(
+              child: Text(
+                config['icon'],
+                style: const TextStyle(fontSize: 28),
+              ),
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(

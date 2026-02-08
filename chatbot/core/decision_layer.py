@@ -10,6 +10,8 @@ class Policy(Enum):
     CHOICE_OFFER = "CHOICE_OFFER"
     REFLECTION_CHECK = "REFLECTION_CHECK"
     GENERAL = "GENERAL"
+    FRIEND_SUGGEST = "FRIEND_SUGGEST"
+    CONCLUSION = "CONCLUSION"
 
 class DecisionLayer:
     @staticmethod
@@ -21,6 +23,10 @@ class DecisionLayer:
         distortion = signals.get("distortion", "none")
         s_type = signals.get("type", "FEELING")
         state_str = str(state).split(".")[-1] # Handle Enum output safely
+
+        # Step 2: Handle Conclude Intent (Step 3 of Conclusion Mode)
+        if signals.get("intent") == "CONCLUDE" or state_str == "CONCLUSION":
+             return Policy.CONCLUSION.value
 
         # 1. Critical Safety Override (Always applies)
         if risk == "CRITICAL":
@@ -37,6 +43,7 @@ class DecisionLayer:
              if distortion == "none" and intensity < 4:
                  pass # Might exit, but usually stay until closure
              else:
+                 if session: session.locked_help_mode = True
                  return Policy.CBT.value # STICKY
 
         # --- Normal Mode (Standard Chatbot) ---
@@ -56,6 +63,7 @@ class DecisionLayer:
 
         # 1.5 Continuity Check
         if state_str == "INTERVENTION":
+             if session: session.locked_help_mode = True
              if distortion != "none":
                  return Policy.CBT.value
              return Policy.GROUNDING.value
@@ -72,8 +80,19 @@ class DecisionLayer:
         if intensity >= 8 and can_ground:
             return Policy.GROUNDING.value
             
+        # 2.5 Intent: Solve (NEW Fix 3) -> CBT/Action
+        if signals.get("intent") == "SOLVE":
+            if session: session.locked_help_mode = True
+            return Policy.CBT.value # Force to solution-oriented CBT
+
+        # 2.6 Friend Suggestion Mode (NEW Fix 3)
+        if mode == 'friend' and signals.get("emotion") in ["SAD", "ANXIOUS"] and intensity >= 5:
+            if session: session.locked_help_mode = True
+            return Policy.FRIEND_SUGGEST.value
+
         # 3. Cognitive Distortion -> CBT
         if distortion != "none":
+            if session: session.locked_help_mode = True
             return Policy.CBT.value
             
         # 4. Questions -> Psychoeducation

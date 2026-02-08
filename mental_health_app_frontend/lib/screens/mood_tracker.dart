@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+
 import '../services/api_service.dart';
 import 'mood_journal.dart';
 import '../theme/app_theme.dart';
@@ -25,16 +25,16 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
   bool _isLoading = false;
 
   final List<Map<String, dynamic>> _moods = [
-    {'val': 'happy', 'icon': LucideIcons.smile, 'label': 'Happy', 'color': Colors.amber},
-    {'val': 'calm', 'icon': LucideIcons.wind, 'label': 'Calm', 'color': Colors.teal},
-    {'val': 'sad', 'icon': LucideIcons.frown, 'label': 'Sad', 'color': Colors.blue},
-    {'val': 'angry', 'icon': LucideIcons.flame, 'label': 'Angry', 'color': Colors.red},
-    {'val': 'tired', 'icon': LucideIcons.moon, 'label': 'Tired', 'color': Colors.indigo},
-    {'val': 'anxious', 'icon': LucideIcons.zap, 'label': 'Anxious', 'color': Colors.orange},
-    {'val': 'stressed', 'icon': LucideIcons.alertCircle, 'label': 'Stressed', 'color': Colors.deepOrange},
-    {'val': 'grateful', 'icon': LucideIcons.sparkles, 'label': 'Grateful', 'color': Colors.purple},
-    {'val': 'loved', 'icon': LucideIcons.heart, 'label': 'Loved', 'color': Colors.pink},
-    {'val': 'excited', 'icon': LucideIcons.partyPopper, 'label': 'Excited', 'color': Colors.yellow},
+    {'val': 'happy', 'icon': '😊', 'label': 'Happy', 'color': Colors.amber},
+    {'val': 'calm', 'icon': '😌', 'label': 'Calm', 'color': Colors.teal},
+    {'val': 'sad', 'icon': '😔', 'label': 'Sad', 'color': Colors.blue},
+    {'val': 'angry', 'icon': '😠', 'label': 'Angry', 'color': Colors.red},
+    {'val': 'tired', 'icon': '😴', 'label': 'Tired', 'color': Colors.indigo},
+    {'val': 'anxious', 'icon': '😰', 'label': 'Anxious', 'color': Colors.orange},
+    {'val': 'stressed', 'icon': '😫', 'label': 'Stressed', 'color': Colors.deepOrange},
+    {'val': 'grateful', 'icon': '✨', 'label': 'Grateful', 'color': Colors.purple},
+    {'val': 'loved', 'icon': '🥰', 'label': 'Loved', 'color': Colors.pink},
+    {'val': 'excited', 'icon': '🤩', 'label': 'Excited', 'color': Colors.yellow},
   ];
 
   Future<void> _saveMood() async {
@@ -168,10 +168,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                                   width: 2,
                                 ),
                               ),
-                              child: Icon(
+                              child: Text(
                                 _moods.firstWhere((m) => m['val'] == _selectedMoodVal)['icon'],
-                                size: 80,
-                                color: _moods.firstWhere((m) => m['val'] == _selectedMoodVal)['color'],
+                                style: const TextStyle(fontSize: 80),
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -187,7 +186,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                         )
                       : SizedBox(height: 180, key: const ValueKey('empty'), 
                           child: Center(
-                            child: Icon(LucideIcons.heartPulse, size: 60, color: AppTheme.primaryColor.withOpacity(0.2)),
+                             child: Text('💓', style: TextStyle(fontSize: 60, color: AppTheme.primaryColor.withOpacity(0.2))),
                           ),
                         ),
                 ),
@@ -233,10 +232,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                          child: Column(
                            mainAxisAlignment: MainAxisAlignment.center,
                            children: [
-                             Icon(
+                             Text(
                                mood['icon'],
-                               size: 32,
-                               color: isSelected ? moodColor : AppTheme.textLight.withOpacity(0.7),
+                               style: const TextStyle(fontSize: 40),
                              ),
                              const SizedBox(height: 10),
                              Text(
@@ -278,7 +276,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                               controller: _noteController,
                               hintText: "Write a short note...",
                               maxLines: 3,
-                              prefixIcon: LucideIcons.penLine,
+                               prefixIcon: Icons.edit_note_rounded,
                             ),
                             const SizedBox(height: 30),
                             
@@ -286,7 +284,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                               text: "Save Mood",
                               onPressed: _saveMood,
                               isLoading: _isLoading,
-                              icon: LucideIcons.checkCircle,
+                               icon: Icons.check_circle_outline_rounded,
                             ),
                           ],
                         ),

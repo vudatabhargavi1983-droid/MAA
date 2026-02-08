@@ -45,6 +45,9 @@ class Orchestrator:
         # Decides: CHECK_IN vs VALIDATION vs INTERVENTION
         session = get_session(session_id)
         
+        # 0. Track History (Turn Count for Fix 1)
+        session.history.append("user_msg")
+        
         # 1. Update Context (Meaning Memory)
         session.update_context(text, signals)
         
