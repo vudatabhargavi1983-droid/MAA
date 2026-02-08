@@ -111,8 +111,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # FIXED PATHS: Uses BASE_DIR relative paths now
-VOICE_MODEL_PATH = str(BASE_DIR / "models" / "wav2vec2_emotion_torchscript.pt")
-TEXT_MODEL_PATH = str(BASE_DIR / "models" / "roberta_goemotions_torchscript.pt")
+VOICE_MODEL_PATH = str(BASE_DIR / "ml_inference_server" / "models" / "wav2vec2_emotion_torchscript.pt")
+TEXT_MODEL_PATH = str(BASE_DIR / "ml_inference_server" / "models" / "roberta_goemotions_torchscript.pt")
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

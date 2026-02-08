@@ -6,18 +6,10 @@ class Settings:
     
     # Paths 
     # Logic: This file is in core/config.py. Parent is core. Parent of that is ml_inference_server.
-    # We need to go up two levels to get to ml_inference_server root, then up one more if models is in backend root.
-    # Current structure:
-    # Backend/
-    #   models/
-    #   ml_inference_server/
-    #     core/
-    #       config.py
+    SERVER_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    MODEL_DIR = os.path.join(SERVER_ROOT, "models")
     
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    MODEL_DIR = os.path.join(BASE_DIR, "models")
-    
-    # Fallback if models are local for dev, or ENV override
+    # Fallback if ENV override
     if os.getenv("MODEL_DIR"):
         MODEL_DIR = os.getenv("MODEL_DIR")
 
